@@ -1,0 +1,256 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lab_06
+{
+    public class User
+    {
+        public string Name { get; set; }
+        public string Role { get; set; } // ADMIN, MODERATOR, TEACHER, STUDENT
+        public int Age { get; set; }
+        public int[] Marks { get; set; } // zawsze null gdy ADMIN, MODERATOR lub TEACHER
+        public DateTime CreatedAt { get; set; }
+        public DateTime? RemovedAt { get; set; }
+    }
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+
+            List<User> users = new List<User>()
+            {
+            new User { Name = "Marek",Role = "Admin" ,Marks = null,CreatedAt = new DateTime(2019, 2, 2), RemovedAt = null},
+            new User { Name = "Jarek",Role = "Moderator",Marks = null,CreatedAt = new DateTime(2019, 2, 3), RemovedAt = null},
+            new User { Name = "Grzegorz",Role = "Teacher",Marks = null,CreatedAt = new DateTime(2019, 2, 4), RemovedAt = null},
+            new User { Name = "Tomek",Role = "Teacher",Marks = null,CreatedAt = new DateTime(2019, 2, 5), RemovedAt = null},
+            new User { Name = "Andrzej",Role = "Teacher" ,Marks = null,CreatedAt = new DateTime(2020, 4, 2), RemovedAt = null},
+            new User { Name = "Stanisław",Role = "Student",Marks = new [] {3,3,1,2,2}, CreatedAt = new DateTime(2020, 7,1), RemovedAt = new DateTime(2020,10,10) },
+            new User { Name = "Jacek",Role = "Student",Marks = new [] {2,4,2,5,5}, CreatedAt = new DateTime(2020, 7, 4), RemovedAt = null}, 
+            new User { Name = "Zdzisław",Role = "Student",Marks = new [] {3,3,4,2,5},CreatedAt = new DateTime(2020, 7, 4),RemovedAt = new DateTime(2020,10,24) },
+            new User { Name = "Zdzisława",Role = "Student",Marks = new [] {4,5,5,6,2}, CreatedAt = new DateTime(2020, 7, 3), RemovedAt = null},
+            new User { Name = "Piotrek",Role = "Student",Marks = new [] {5,5,6,3,4}, CreatedAt = new DateTime(2020, 7, 4),RemovedAt = new DateTime(2020,10,21) },
+            new User { Name = "Józef",Role = "Student",Marks = new [] {2,5,3,3,4}, CreatedAt = new DateTime(2020, 7, 10), RemovedAt = null },
+            new User { Name = "Magdalena",Role = "Student",Marks = new [] {4,5,6,3}, CreatedAt = new DateTime(217, 7, 12), RemovedAt = null},
+            new User { Name = "Jan",Role = "Student",Marks = new [] {5,5,5,4,3}, CreatedAt = new DateTime(2020, 7, 14), RemovedAt = null},
+            new User { Name = "Barbara",Role = "Student",Marks = new [] {3,3,3,4}, CreatedAt = new DateTime(2020, 7, 15),RemovedAt = new DateTime(2017,10,25) },
+            new User { Name = "Gabrysia",Role = "Student",Marks = new [] {4,4,5,2,4,5}, CreatedAt = new DateTime(2020, 7, 7), RemovedAt = null},
+            new User { Name = "Ola",Role = "Student",Marks = new [] {3,3,5,2}, CreatedAt = new DateTime(2020, 7, 5),RemovedAt = new DateTime(2020,10,4) },
+            new User { Name = "Julka",Role = "Student",Marks = new [] {6,6,5,4,5}, CreatedAt = new DateTime(2020, 7, 8), RemovedAt = null},
+            new User { Name = "Mercedes",Role = "Student",Marks = new [] {5,5,3,4,5}, CreatedAt = new DateTime(2020, 7, 6), RemovedAt = null},
+            new User { Name = "Krzysztof",Role = "Student",Marks = new [] {4,4,5,3,2}, CreatedAt = new DateTime(2020, 7, 20), RemovedAt = null},
+            new User { Name = "Filip",Role = "Student",Marks = new [] {5,5,5,3,4}, CreatedAt = new DateTime(2020, 7, 10), RemovedAt = null}
+            };
+            //1. Ilość rekordków w tablicy
+            Console.WriteLine("Zadanie 1: ");
+            Console.WriteLine("Ilość rekordów w tablicy: " + (from user in users select user).Count());
+            Console.WriteLine("Ilość rekordów w tablicy: " + users.Count());
+
+            //2 Lista nazw użytkowników 
+            Console.WriteLine();
+            Console.WriteLine("Zadanie 2: ");
+            var names1 = users.Select(user => user.Name).ToList();
+            var names2 = (from user in users select user.Name).ToList();
+            foreach (string user in names1)
+                Console.WriteLine(user);
+            Console.WriteLine();
+            foreach (string user in names2)
+                Console.WriteLine(user);
+
+            // 3. Lista posortowanych użytkowników po nazwach
+            Console.WriteLine();
+            var users1 = (from user in users orderby user.Name select user).ToList();
+            var users2 = users.OrderBy(user => user.Name).ToList();
+
+            Console.WriteLine("Zadanie 3: ");
+            foreach (var user in users1)
+                Console.WriteLine(user.Name);
+            Console.WriteLine();
+            foreach (var user in users2)
+                Console.WriteLine(user.Name);
+
+            //4. Listę dostępnych ról użytkowników 
+            Console.WriteLine();
+            var roles1 = from user in users group user by user.Role;
+            var roles2 = users.GroupBy(user => user.Role).Select(group => group.First()).ToList();
+            Console.WriteLine("Zadanie 4: ");
+            foreach (var role in roles1)
+                Console.WriteLine(role.Key);
+            Console.WriteLine();
+            foreach (User user in roles2)
+                Console.WriteLine(user.Role);
+
+            //5. Lista Pogrupowanych użytkowników po rolach
+            Console.WriteLine();
+            var users_1 = (from user in users orderby user.Role select user).ToList();
+            var users_2 = users.OrderBy(user => user.Role).ToList();
+            Console.WriteLine("Zadanie 5: ");
+            foreach (var user in users_1)
+                Console.WriteLine(user.Name + " " + user.Role);
+            Console.WriteLine();
+            foreach (var user in users_2)
+                Console.WriteLine(user.Name + " " + user.Role);
+
+            //6. Ilość rekordów, dla których podano oceny(nie null i > 0) 
+            Console.WriteLine();
+            var score = users.Where(user => user.Marks != null && user.Marks.Length > 0).Select(user => user).Count();
+            Console.WriteLine("Zadanie 6: " + "\n" + "Liczba rekordów dla których nie podano ocney: " + score);
+            Console.WriteLine("Liczba rekordów dla których nie podano ocney: " + (from user in users where user.Marks != null && user.Marks.Length > 0 select user).Count());
+
+            //7. Suma,ilość i średnia wszystkich ocen studentow 
+            Console.WriteLine();
+            var amount1 = (from user in users where user.Marks != null && user.Marks.Length > 0 select user.Marks.Count()).Sum();
+            var sum1 = (from user in users where user.Marks != null && user.Marks.Length > 0 select user.Marks.Sum()).Sum();
+            var average1 = (from user in users where user.Marks != null && user.Marks.Length > 0 select user.Marks.Average()).Average();
+
+            var amount2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).Select(user => user.Marks.Count()).Sum();
+            var sum2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).Select(user => user.Marks.Sum()).Sum();
+            var average2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).Select(user => user.Marks.Average()).Average();
+
+            Console.WriteLine("Zadanie 7: ");
+            Console.WriteLine("Ilość Ocen: " + amount1 + "\n " + "Suma Ocen: " + sum1 + "\n " + "Średnia Ocen: " + average1);
+            Console.WriteLine();
+            Console.WriteLine("Ilość Ocen: " + amount2 + "\n " + "Suma Ocen: " + sum2 + "\n " + "Średnia Ocen: " + average2);
+
+            //8. Najlepszą ocenę 
+            Console.WriteLine();
+            var bestgrade1 = (from user in users where user.Marks != null && user.Marks.Length > 0 orderby user.Marks.Max() descending select user.Marks.Max());
+
+            var bestgrade2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).OrderByDescending(user => user.Marks.Max()).Select(user => user.Marks.Max());
+            Console.WriteLine("Zadanie 8: ");
+            foreach (var result1 in bestgrade1.Take(1))
+                Console.WriteLine("Najlepsza ocena to: " + result1);
+            
+            foreach (var result2 in bestgrade2.Take(1))
+                Console.WriteLine("Najlepsza ocena to: " + result2);
+            
+
+            //9. Najgorszą ocene 
+            Console.WriteLine();
+            var worstgrade1 = (from user in users where user.Marks != null && user.Marks.Length > 0 orderby user.Marks.Min() ascending select user.Marks.Min());
+
+            var worstgrade2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).OrderBy(user => user.Marks.Min()).Select(user => user.Marks.Min());
+            Console.WriteLine("Zadanie 9: " );
+            foreach (var result3 in worstgrade1.Take(1))
+                Console.WriteLine("Najgorsza ocena to: " + result3);
+            
+            foreach (var result4 in worstgrade2.Take(1))
+                Console.WriteLine("Najgorsza ocena to: " + result4);
+
+            //10. Najlepszy Student 
+            Console.WriteLine();
+            var beststudent1 = (from user in users where user.Marks != null && user.Marks.Length > 0 orderby user.Marks.Average() descending select user.Name);
+
+            var beststudent2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).OrderByDescending(user => user.Marks.Average()).Select(user => user.Name);
+            Console.WriteLine("Zadanie 10: ");
+            foreach (var result5 in beststudent1.Take(1))
+                Console.WriteLine("Najlepszym studentem jest: " + result5);
+
+            foreach (var result6 in beststudent2.Take(1))
+                Console.WriteLine("Najlepszym studentem jest: " + result6);
+
+            //11. Liste studentów którzy posiadają najmniej ocen 
+            Console.WriteLine();
+            var fewestratings1 = (from user in users where user.Marks != null && user.Marks.Length > 0 orderby user.Marks.Length ascending select user).ToList();
+            var fewestratings2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).OrderBy(user => user.Marks.Length).Select(user => user);
+
+            Console.WriteLine("Zadanie 11: ");
+            foreach (var user in fewestratings1.Take(1))
+                Console.WriteLine("Najmniej ocen posiada: " + user.Name);
+
+            foreach (var user in fewestratings2.Take(1))
+                Console.WriteLine("Najmniej ocen posiada: " + user.Name);
+
+            //12. Liste studentów którzy posiadają najwięcej ocen 
+            Console.WriteLine();
+            var mostratings1 = (from user in users where user.Marks != null && user.Marks.Length > 0 orderby user.Marks.Length descending select user).ToList();
+            var mostratings2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).OrderByDescending(user => user.Marks.Length).Select(user => user);
+            Console.WriteLine("Zadanie 12: ");
+            foreach (var user in mostratings1.Take(1))
+                Console.WriteLine("Najwiecej ocen posiada: " + user.Name);
+            foreach (var user in mostratings2.Take(1))
+                Console.WriteLine("Najwiecej ocen posiada: " + user.Name);
+            //13 Listę obiektów zawierających tylko nazwę i średnią ocenę (mapowanie na inny obiekt)
+            Console.WriteLine();
+            var namemark1 = users.Where(user => user.Marks != null).OrderByDescending(user => user.Marks.Average()).Select(user => user.Name + " " + user.Marks.Average());
+            var namemark2 = from user in users where user.Marks != null orderby user.Marks.Average() descending select user.Name + " " + user.Marks.Average();
+            Console.WriteLine("Zadanie 13: ");
+            foreach (var student in namemark1)
+                Console.WriteLine(student);
+            foreach (var student in namemark2)
+                Console.WriteLine(student);
+
+            //14. Studentów posortowanych od najlepszego 
+            Console.WriteLine();
+            var thebeststudent1 = (from user in users where user.Marks != null && user.Marks.Length > 0 orderby user.Marks.Average() descending select user.Name);
+            var thebeststudent2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).OrderByDescending(user => user.Marks.Average()).Select(user => user.Name);
+
+            Console.WriteLine("Zadanie 14: ");
+            foreach (var user in thebeststudent1)
+                Console.WriteLine(user);
+            Console.WriteLine();
+            foreach (var user in thebeststudent2)
+                Console.WriteLine(user);
+
+            //15. Średnią ocenę wszystkich studentów
+            Console.WriteLine();
+            var averagestudents1 = (from user in users where user.Marks != null && user.Marks.Length > 0 select user.Marks.Average()).Average();
+            var averagestudents2 = users.Where(user => user.Marks != null && user.Marks.Length > 0).Select(user => user.Marks.Average()).Average();
+            Console.WriteLine("Zadanie 15: ");
+            Console.WriteLine("Średnia ocena wszystkich studentów to: " + averagestudents1);
+            Console.WriteLine("Średnia ocena wszystkich studentów to: " + averagestudents2);
+
+            //16. Lista użytkowników pogrupowanych po miesiącach daty utworzenia (np. 2022-02,2022-03,2022-04, itp.)
+            Console.WriteLine();
+            var groupedusers1 = (from User user in users orderby user.CreatedAt.Month group user by user.CreatedAt.Month);
+            var groupedusers2 = users.GroupBy(user => user.CreatedAt.Month).OrderByDescending(user => -user.Key);
+
+            Console.WriteLine("Zadanie 16: ");
+            foreach (var groupedusers2_ in groupedusers1)
+            {
+                Console.WriteLine(groupedusers2_.Key.ToString());
+                foreach (var user in groupedusers2_)
+                {
+                    Console.WriteLine(user.Name);
+                }
+            }
+            Console.WriteLine();
+            foreach (var groupedusers2_ in groupedusers2)
+            {
+                Console.WriteLine(groupedusers2_.Key.ToString());
+                foreach (var user in groupedusers2_)
+                {
+                    Console.WriteLine(user.Name);
+                }
+            }
+
+            //17. Lista użytkowników którzy nie zostali usunięci (data usunięcia nie została ustawiona) 
+            Console.WriteLine();
+            var notremoved1 = (from user in users where user.RemovedAt == null select user).ToList();
+            var notremoved2 = users.Where(user => user.RemovedAt == null).Select(user => user).ToList();
+
+            Console.WriteLine("Zadanie 17: ");
+            foreach (var user in notremoved1)
+                Console.WriteLine(user.Name);
+            Console.WriteLine();
+            foreach (var user in notremoved2)
+                Console.WriteLine(user.Name);
+
+            //18. Najnowszego Studenta (najnowsza data uwtorzenia) 
+            Console.WriteLine();
+            var neweststudent1 = (from user in users orderby user.CreatedAt descending select user).ToList();
+            var neweststudent2 = users.OrderByDescending(user => user.CreatedAt).Select(user => user).ToList();
+            Console.WriteLine("Zadanie 18");
+            foreach (var user in neweststudent1.Take(1))
+            {
+                Console.WriteLine("Najnowszy student to: " + user.Name);
+            }
+            foreach (var user in neweststudent2.Take(1))
+            {
+                Console.WriteLine("Najnowszy student to: " + user.Name);
+            }
+        }
+    }
+}
