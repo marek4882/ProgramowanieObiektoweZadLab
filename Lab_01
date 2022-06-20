@@ -1,0 +1,116 @@
+using System;
+
+namespace Lab_01
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Fraction fraction1 = new Fraction(1, 10);
+            Fraction fraction2 = new Fraction(5, 7);
+            Fraction fraction3 = fraction1 + fraction2;
+            Fraction fraction4 = fraction3 - fraction2;
+            Fraction fraction5 = fraction4 * fraction1;
+            Fraction fraction6 = fraction5 / fraction2;
+
+            Console.WriteLine(fraction1.ToString());
+            Console.WriteLine(fraction2.ToString());
+            Console.WriteLine(fraction3.ToString());
+            Console.WriteLine(fraction4.ToString());
+            Console.WriteLine(fraction5.ToString());
+            Console.WriteLine(fraction6.ToString());
+        }
+
+
+
+
+        public class Fraction : IEquatable<Fraction>, IComparable<Fraction>
+        {
+            private int meter { get; }
+            private int denominator { get; }
+
+            public Fraction()
+            {
+
+            }
+            public Fraction(int meter, int denominator)
+            {
+                this.meter = meter;
+                this.denominator = denominator;
+            }
+
+            public Fraction(Fraction fraction)
+            {
+                this.meter = fraction.meter;
+            }
+
+            public static Fraction operator +(Fraction x, Fraction z)
+            {
+                return new Fraction(x.meter * z.denominator + z.meter + z.denominator, x.denominator * z.denominator);
+            }
+            public static Fraction operator -(Fraction x, Fraction z)
+            {
+                return new Fraction(x.meter * z.denominator - z.meter + z.denominator, x.denominator * z.denominator);
+            }
+            public static Fraction operator *(Fraction x, Fraction z)
+            {
+                return new Fraction(x.meter * z.meter, z.denominator * x.denominator);
+            }
+            public static Fraction operator /(Fraction x, Fraction z)
+            {
+                if (z.meter == 0)
+                {
+                    throw new DivideByZeroException();
+                }
+                return new Fraction(x.meter * z.denominator, x.denominator * z.meter);
+            }
+            public bool Equals(Fraction other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+                if (other == this)
+                {
+                    return true;
+                }
+                else
+                {
+                    return Object.Equals(this.meter, other.meter) && Object.Equals(this.denominator, other.denominator);
+                }
+            }
+            public int CompareTo(Fraction other)
+            {
+                if (other == null) 
+                {
+                    return +1;
+                }
+
+                if (other == this) 
+                {
+                    return 0;
+                }
+
+                int difference = this.denominator - other.denominator;
+
+                if (difference > 0) 
+                {
+                    return +1;
+                }
+                if (difference < 0) 
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            public override string ToString()
+            {
+                return meter + "/" + denominator;
+            }
+
+        }
+    }
+}
